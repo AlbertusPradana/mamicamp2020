@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import sourceData from '@/data'
 import PostList from '@/components/PostList'
 import PostEditor from '@/components/PostEditor'
 
