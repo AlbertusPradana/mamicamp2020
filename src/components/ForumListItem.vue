@@ -22,21 +22,20 @@
 </template>
 
 <script>
-    export default {
-      props: {
-        forum: {
-          required: true,
-          type: Object
-        }
-      },
-      computed: {
-        threadsCount () {
-          return this.forum.threads
-            ? Object.values(this.forum.threads).length
-            : 0
-        }
-      }
+import {countObjectProperties} from '@/utils'
+export default {
+  props: {
+    forum: {
+      required: true,
+      type: Object
     }
+  },
+  computed: {
+    threadsCount () {
+      return countObjectProperties(this.forum.threads)
+    }
+  }
+}
 </script>
 
 <style scoped>

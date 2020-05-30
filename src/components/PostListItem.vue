@@ -23,22 +23,23 @@
 </template>
 
 <script>
-    export default {
-      props: {
-        post: {
-          required: true,
-          type: Object
-        }
-      },
-      computed: {
-        user () {
-          return this.$store.state.users[this.post.userId]
-        },
-        userPostsCount () {
-          return Object.keys(this.user.posts).length
-        }
-      }
+import {countObjectProperties} from '@/utils'
+export default {
+  props: {
+    post: {
+      required: true,
+      type: Object
     }
+  },
+  computed: {
+    user () {
+      return this.$store.state.users[this.post.userId]
+    },
+    userPostsCount () {
+      return countObjectProperties(this.user.posts)
+    }
+  }
+}
 </script>
 
 <style scoped>

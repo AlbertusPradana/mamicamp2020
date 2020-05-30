@@ -29,20 +29,21 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      thread: {
-        required: true,
-        type: Object
-      }
+import {countObjectProperties} from '@/utils'
+export default {
+  props: {
+    thread: {
+      required: true,
+      type: Object
+    }
+  },
+  computed: {
+    repliesCount () {
+      return countObjectProperties(this.thread.posts) - 1
     },
-    computed: {
-      repliesCount () {
-        return Object.keys(this.thread.posts).length - 1
-      },
-      user () {
-        return this.$store.state.users[this.thread.userId]
-      }
+    user () {
+      return this.$store.state.users[this.thread.userId]
     }
   }
+}
 </script>
