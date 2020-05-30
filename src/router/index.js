@@ -35,6 +35,12 @@ export default new Router({
       props: true
     },
     {
+      path: '/user/edit',
+      name: 'ProfileEdit',
+      component: Profile,
+      props: {edit: true}
+    },
+    {
       path: '/thread/:id',
       name: 'ThreadShow',
       component: ThreadShow,
