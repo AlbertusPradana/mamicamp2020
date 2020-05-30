@@ -42,7 +42,7 @@ export default new Router({
       props: {edit: true}
     },
     {
-      path: '/thread/create',
+      path: '/thread/create/:forumId',
       name: 'ThreadCreate',
       component: ThreadCreate,
       props: true
