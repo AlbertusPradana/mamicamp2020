@@ -6,29 +6,33 @@
 </template>
 
 <script>
-    import CategoryListItem from '@/components/CategoryListItem'
-    export default {
-      components: {
-        CategoryListItem
-      },
-      props: {
-        id: {
-          required: true,
-          type: String
-        }
-      },
-      computed: {
-        category () {
-          return this.$store.state.categories[this.id]
-        }
-      },
-      created () {
-        this.$store.dispatch('fetchCategory', {id: this.id})
-          .then(category => {
-            this.$store.dispatch('fetchForums', {ids: category.forums})
-          })
+  import {mapActions} from 'vuex'
+  import CategoryListItem from '@/components/CategoryListItem'
+  export default {
+    components: {
+      CategoryListItem
+    },
+    props: {
+      id: {
+        required: true,
+        type: String
       }
+    },
+    computed: {
+      category () {
+        return this.$store.state.categories[this.id]
+      }
+    },
+    methods: {
+      ...mapActions(['fetchCategory', 'fetchForums'])
+    },
+    created () {
+      this.fetchCategory({id: this.id})
+      .then(category => {
+        this.fetchForums({ids: category.forums})
+      })
     }
+  }
 </script>
 
 <style scoped>
