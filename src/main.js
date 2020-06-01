@@ -4,26 +4,21 @@ import Vue from 'vue'
 import firebase from 'firebase'
 import App from './App'
 import router from './router'
-import AppDate from '@/components/AppDate'
 import store from '@/store'
-
+import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
 Vue.config.productionTip = false
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: 'AIzaSyCsa0HEASKa99ALJO-nWHXtgxzWkrqVziY',
-  authDomain: 'mamicamp2020.firebaseapp.com',
-  databaseURL: 'https://mamicamp2020.firebaseio.com',
-  projectId: 'mamicamp2020',
-  storageBucket: 'mamicamp2020.appspot.com',
-  messagingSenderId: '312628094067',
-  appId: '1:312628094067:web:2b0ea5fed5fb162e143606',
-  measurementId: 'G-E1XTEMN2QV'
-}
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig)
-firebase.analytics()
+const config = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_ID
+}
+firebase.initializeApp(config)
 
 /* eslint-disable no-new */
 new Vue({
