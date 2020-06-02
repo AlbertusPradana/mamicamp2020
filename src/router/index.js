@@ -44,13 +44,15 @@ const router = new Router({
       path: '/user/edit',
       name: 'ProfileEdit',
       component: Profile,
-      props: {edit: true}
+      props: {edit: true},
+      meta: { requiresAuth: true }
     },
     {
       path: '/thread/create/:forumId',
       name: 'ThreadCreate',
       component: ThreadCreate,
-      props: true
+      props: true,
+      meta: { requiresAuth: true }
     },
     {
       path: '/thread/:id',
@@ -62,21 +64,25 @@ const router = new Router({
       path: '/thread/:id/edit',
       name: 'ThreadEdit',
       component: ThreadEdit,
-      props: true
+      props: true,
+      meta: { requiresAuth: true }
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: { requiresGuest: true }
     },
     {
       path: '/signin',
       name: 'SignIn',
-      component: SignIn
+      component: SignIn,
+      meta: { requiresGuest: true }
     },
     {
       path: '/logout',
       name: 'SignOut',
+      meta: { requiresGuest: true },
       beforeEnter (to, from, next) {
         store.dispatch('signOut')
           .then(() => next({name: 'Home'}))
@@ -95,8 +101,13 @@ router.beforeEach((to, from, next) => {
   store.dispatch('initAuthentication')
     .then(user => {
       if (to.matched.some(route => route.meta.requiresAuth)) {
-        // protected route
         if (user) {
+          next()
+        } else {
+          next({name: 'SignIn'})
+        }
+      } else if (to.matched.some(route => route.meta.requiresGuest)) {
+        if (!user) {
           next()
         } else {
           next({name: 'Home'})
