@@ -7,11 +7,25 @@
 
         <div class="form-group">
           <label for="email">Email</label>
-          <input v-model="form.email" id="email" type="text" class="form-input">
+          <input
+            v-model="form.email"
+            @blur="$v.form.email.$touch()"
+            id="email" type="text" class="form-input">
+          <template v-if="$v.form.email.$error">
+            <span v-if="!$v.form.email.required" class="form-error">This email field is required.</span>
+            <span v-else-if="!$v.form.email.email" class="form-error">This is not a valid email address. Type your email correctly.</span>
+          </template>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input v-model="form.password" id="password" type="password" class="form-input">
+          <input
+            v-model="form.password"
+            @blur="$v.form.password.$touch()"
+            id="password" type="password" class="form-input">
+          <template v-if="$v.form.password.$error">
+            <span v-if="!$v.form.password.required" class="form-error">This password field is required.</span>
+            <span v-if="!$v.form.password.minLength" class="form-error">Password must be at least 8 characters long.</span>
+          </template>
         </div>
 
         <div class="push-top">
@@ -31,38 +45,54 @@
 </template>
 
 <script>
-    export default {
-      data () {
-        return {
-          form: {
-            email: null,
-            password: null
-          }
+  import { required, email, minLength } from 'vuelidate/lib/validators'
+  export default {
+    data () {
+      return {
+        form: {
+          email: null,
+          password: null
         }
-      },
-      methods: {
-        signIn () {
+      }
+    },
+    validations: {
+      form: {
+        email: {
+          required,
+          email
+        },
+        password: {
+          required,
+          minLength: minLength(8)
+        }
+      }
+    },
+    methods: {
+      signIn () {
+        this.$v.form.$touch()
+        if (!this.$v.form.$invalid) {
           this.$store.dispatch('auth/signInWithEmailAndPassword', {
             email: this.form.email,
             password: this.form.password
           })
             .then(() => this.successRedirect())
-            .catch(error => alert('🤷‍️' + error.message))
-        },
-        signInWithGoogle () {
-          this.$store.dispatch('auth/signInWithGoogle')
-            .then(() => this.successRedirect())
-            .catch(error => alert('🤷‍️' + error.message))
-        },
-        successRedirect () {
-          const redirectTo = this.$route.query.redirectTo || {name: 'Home'}
-          this.$router.push(redirectTo)
+            .catch(error => alert(error.message))
         }
       },
-      created () {
-        this.$emit('ready')
+      signInWithGoogle () {
+        this.$store.dispatch('auth/signInWithGoogle')
+          .then(() => this.successRedirect())
+          .catch(error => alert(error.message))
+      },
+      successRedirect () {
+        const redirectTo = this.$route.query.redirectTo || {name: 'Home'}
+        this.$router.push(redirectTo)
       }
+    },
+    created () {
+      this.$emit('ready')
     }
+  }
 </script>
 
 <style scoped>
